@@ -1,4 +1,5 @@
-obj-m += simple_rootkit.o
+obj-m += rootkit.o
+rootkit-objs := simple_rootkit.o fops.o
 
 all:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
