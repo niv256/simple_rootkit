@@ -12,11 +12,11 @@
 
 
 ### Currently planned features:
-- [ ] process hiding from ps.
+- [x] keylogging.
+- [ ] process hiding from ps
 - [ ] file hiding from ls.
 - [ ] controlling file renaming.
 - [ ] providing root access from inside the machine.
-- [ ] keylogging.
 
 ### Minor TODO list:
 - [ ] Automate the mknod process.
