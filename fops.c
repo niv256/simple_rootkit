@@ -12,7 +12,8 @@ struct file_operations fops = {
     .read = device_read
 };
 
-int major;
+// the character device major number
+static int major;
 
 int init_fops(void) {
 	major = register_chrdev(0, DEVICE_NAME, &fops);
@@ -30,17 +31,18 @@ void exit_fops(void) {
 	return;
 }
 
+// read function for character device, gives the user the keystrokes
 static ssize_t device_read(struct file *filp, char *buffer, size_t length, loff_t *offset) {
-    size_t count = 0;
+	size_t count = 0;
 	char *msg = keystrokes;
-    if(*offset == 0) {
-        while (msg[count] != 0) {
-            put_user(msg[count], buffer++);
-            count++;
-            (*offset)++;
-        }
-        return count;
-    } else {
-        return 0;
-    }
+	if(*offset == 0) {
+		while (msg[count] != 0) {
+			put_user(msg[count], buffer++);
+			count++;
+			(*offset)++;
+		}
+		return count;
+	} else {
+		return 0;
+	}
 }
