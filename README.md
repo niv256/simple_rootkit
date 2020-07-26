@@ -3,12 +3,13 @@
 
 ### How to build and run the LKM
 1. Clone the repository to a local folder.
-2. Run make in order to build the module.
-3. Watch the kernel logging with `dmesg -Hw` in order to see printk messages in real time.
-4. Insert the module with `sudo insmod rootkit.ko`.
-5. Create the character driver with `sudo mknod /dev/rootkit c [INSERT MAJOR HERE] 0`.  
+2. cd into src/
+3. Run make in order to build the module.
+4. Watch the kernel logging with `dmesg -Hw` in order to see printk messages in real time.
+5. Insert the module with `sudo insmod rootkit.ko`.
+6. Create the character driver with `sudo mknod /dev/rootkit c [INSERT MAJOR HERE] 0`.  
    You can get the major number from the kernel messages in dmesg.
-6. Remove the module with `sudo rmmod rootkit.ko`.
+7. Remove the module with `sudo rmmod rootkit.ko`.
 
 
 ### Currently planned features:
