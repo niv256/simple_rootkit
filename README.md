@@ -21,8 +21,8 @@
 - [ ] providing root access from inside the machine.
 
 ### Minor TODO list:
+- [x] Make a script for the qemu environment testing.
 - [ ] Automate the mknod process.
-- [ ] Make a script for the qemu environment testing.
   
 <br>
 Built and tested on a 5.7.9 arch linux machine.
