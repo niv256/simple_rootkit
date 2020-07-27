@@ -4,8 +4,8 @@
 
 // table for holding all the requested hooks
 static struct hook {
-    unsigned long *old_func;
-    unsigned long *new_func;
+    unsigned long old_func;
+    unsigned long new_func;
     int index;
 } hook_table[MAX_HOOKS];
 int table_index;
@@ -14,13 +14,15 @@ int table_index;
 int locked;
 
 extern unsigned long (*kallsyms_lookup_name)(const char *);
-unsigned long **syscall_table;
+static unsigned long *syscall_table;
 
 void init_hooking(void) {
 	memset(hook_table, 0, sizeof(hook_table));
 	table_index = 0;
 	locked = 0;
-	syscall_table = (unsigned long **) kallsyms_lookup_name("sys_call_table");
+	syscall_table = (unsigned long *) (*kallsyms_lookup_name)("sys_call_table");
+	printk(KERN_INFO "syscalltable value: %px", syscall_table);
+	//printk(KERN_INFO "syscalltable value: %ln", syscall_table);
 }
 
 int exit_hooking(void) {
@@ -34,7 +36,7 @@ int exit_hooking(void) {
 
 // adds a new syscall to the hooking function
 // if already hooked, error.
-int add_hook(unsigned long *new_func,int index){
+int add_hook(unsigned long new_func,int index){
 	if (table_index == MAX_HOOKS) {
 		return 1;
 	}
@@ -64,12 +66,12 @@ int hook(){
 	if (locked) {
 		return 1;
 	}
-    unprotect_memory();
+	set_addr_rw((unsigned long) syscall_table);
     for(int i = 0; i < table_index; i++){
         syscall_index = hook_table[i].index;
         syscall_table[syscall_index] = hook_table[i].new_func;
     }
-    protect_memory();
+	set_addr_ro((unsigned long) syscall_table);
 	locked = 1;
 
 	return 0;
@@ -81,12 +83,16 @@ int unhook(){
 	if (!locked) {
 		return 1;
 	}
-    unprotect_memory();
+	set_addr_rw((unsigned long) syscall_table);
     for(int i = 0; i < table_index; i++){
         int syscall_index = hook_table[i].index;
         syscall_table[syscall_index] = hook_table[i].old_func;
     }
-    protect_memory();
+	set_addr_ro((unsigned long) syscall_table);
 
 	return 0;
+}
+
+t_syscall get_syscall(int index) {
+	return (t_syscall) syscall_table[index];
 }

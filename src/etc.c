@@ -17,27 +17,29 @@ void exit_etc(void) {
 	}
 }
 
-// turn off the wp bit in cr0, to turn off read only page protection
-inline int unprotect_memory(void) {
-	if (!protected) {
-		return 1;
-	}
+// set page holding _addr to read write
+int set_addr_rw(unsigned long _addr) {
 
-	old_cr0 = read_cr0();
-	write_cr0(old_cr0 & (~0x10000));
-	protected = 0;
+        unsigned int level;
+        pte_t *pte;
 
-	return 0;
+        pte = lookup_address(_addr, &level);
+
+        if (pte->pte &~ _PAGE_RW) {
+                pte->pte |= _PAGE_RW;
+        }
+
+        return 0;
 }
 
-// revert cr0 to before turning off protection
-inline int protect_memory(void) {
-	if (protected) {
-		return 1;
-	}
+// set page holding _addr to read only
+int set_addr_ro(unsigned long _addr) {
 
-	write_cr0(old_cr0);
-	protected = 1;
+        unsigned int level;
+        pte_t *pte;
 
-	return 0;
+        pte = lookup_address(_addr, &level);
+        pte->pte = pte->pte &~_PAGE_RW;
+
+        return 0;
 }
