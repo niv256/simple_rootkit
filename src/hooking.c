@@ -8,10 +8,10 @@ static struct hook {
     unsigned long new_func;
     int index;
 } hook_table[MAX_HOOKS];
-int table_index;
+static int table_index;
 
 // to lock hooking and adding hooks to the table after hook()
-int locked;
+static int locked;
 
 extern unsigned long (*kallsyms_lookup_name)(const char *);
 static unsigned long *syscall_table;
