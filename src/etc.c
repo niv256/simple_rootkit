@@ -1,22 +1,6 @@
 #include <asm/paravirt.h>
 #include "etc.h"
 
-unsigned long (*kallsyms_lookup_name)(const char *);
-
-static long long old_cr0;
-static int protected;
-
-void init_etc(unsigned long lookup_addr) {
-	protected = 1;
-	kallsyms_lookup_name = (void *) lookup_addr;
-}
-
-void exit_etc(void) {
-	if (!protected) {
-		protect_memory();
-	}
-}
-
 // set page holding _addr to read write
 int set_addr_rw(unsigned long _addr) {
 

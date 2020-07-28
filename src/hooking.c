@@ -1,4 +1,4 @@
-#include <linux/module.h>
+#include <linux/kallsyms.h>
 #include "etc.h"
 #include "hooking.h"
 
@@ -13,16 +13,14 @@ static int table_index;
 // to lock hooking and adding hooks to the table after hook()
 static int locked;
 
-extern unsigned long (*kallsyms_lookup_name)(const char *);
+// extern unsigned long (*kallsyms_lookup_name)(const char *);
 static unsigned long *syscall_table;
 
 void init_hooking(void) {
 	memset(hook_table, 0, sizeof(hook_table));
 	table_index = 0;
 	locked = 0;
-	syscall_table = (unsigned long *) (*kallsyms_lookup_name)("sys_call_table");
-	printk(KERN_INFO "syscalltable value: %px", syscall_table);
-	//printk(KERN_INFO "syscalltable value: %ln", syscall_table);
+	syscall_table = (unsigned long *) kallsyms_lookup_name("sys_call_table");
 }
 
 int exit_hooking(void) {
