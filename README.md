@@ -1,5 +1,6 @@
 # simple_rootkit
-## A simple LKM kernel space rootkit for v5.x linux with multiple functions.
+## A simple LKM kernel space rootkit for < v5.7 linux with multiple functions.
+## Warning: due to the unexport of kallsyms_lookup functions from the kernel introduced in v5.7, this rootkit will NOT work on this version onwards.
 
 ### How to build and run the LKM
 1. Clone the repository to a local folder.
@@ -11,18 +12,26 @@
    You can get the major number from the kernel messages in dmesg.
 7. Remove the module with `sudo rmmod rootkit.ko`.
 
+### How to read the user's keystrokes:
+1. Make sure you have created the character device from step 6 above.
+2. Read from `/dev/rootkit` file, for example, with `cat /dev/rootkit`.
+
+### How to spawn a root shell as a normal user once the rootkit has loaded:
+1. Execute the get_root program (in get_root folder) or anything similar which changes a file's name from "please_give" to "me_root_priv" and spawns a shell.
+2. Execute the `id` program to make sure you are root.
+3. Enjoy unlimited capabilities!
 
 ### Currently planned features:
 - [x] keylogging.
+- [x] controlling file renaming.
+- [x] providing root access from inside the machine.
 - [ ] process hiding from ps
 - [ ] file hiding from ls.
-- [ ] controlling file renaming.
-- [ ] providing root access from inside the machine.
 
 ### Minor TODO list:
 - [x] Make a script for the qemu environment testing.
 - [ ] Automate the mknod process.
   
 <br>
-Built and tested on a 5.7.9 arch linux machine.
+Built and tested on a 18.04 ubuntu machine (kernel version 5.3.0).
 qemu environment runs 5.6.18 kernel version.
