@@ -8,7 +8,6 @@ int exit_hooking(void);
 
 int add_hook(unsigned long, int);
 int hook(void);
-int unhook(void);
 
 t_syscall get_syscall(int);
 

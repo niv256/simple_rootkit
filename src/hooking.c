@@ -15,6 +15,7 @@ static int locked;
 
 // extern unsigned long (*kallsyms_lookup_name)(const char *);
 static unsigned long *syscall_table;
+static int unhook(void);
 
 void init_hooking(void) {
 	memset(hook_table, 0, sizeof(hook_table));
@@ -58,7 +59,7 @@ int add_hook(unsigned long new_func,int index){
 
 // hooks everything in the hooking table.
 // if already hooked, error.
-int hook(){
+int hook(void){
 	int syscall_index;
 
 	if (locked) {
@@ -77,7 +78,7 @@ int hook(){
 
 // unhooks everything in the hooking table.
 // if didn't hook already, error.
-int unhook(){
+static int unhook(void){
 	if (!locked) {
 		return 1;
 	}
@@ -91,6 +92,7 @@ int unhook(){
 	return 0;
 }
 
+// return a syscall's address given index
 t_syscall get_syscall(int index) {
 	return (t_syscall) syscall_table[index];
 }
