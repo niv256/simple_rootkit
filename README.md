@@ -13,9 +13,8 @@
 7. Remove the module with `sudo rmmod rootkit.ko`.
 
 ### How to hide a chosen pid:
-1. When inserting the module, pass the chosen pid as a parameter to the insmod function, like this:
-   `sudo insmod rookit.ko pid="6375"'
-   To hide pid 6375.
+1. When inserting the module, pass the chosen pid as a parameter to the insmod function, like this:  
+   `sudo insmod rookit.ko pid="6375"`, to hide pid 6375.
 
 
 ### How to read the user's keystrokes:
