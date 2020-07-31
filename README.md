@@ -12,6 +12,12 @@
    You can get the major number from the kernel messages in dmesg.
 7. Remove the module with `sudo rmmod rootkit.ko`.
 
+### How to hide a chosen pid:
+1. When inserting the module, pass the chosen pid as a parameter to the insmod function, like this:
+   `sudo insmod rookit.ko pid="6375"'
+   To hide pid 6375.
+
+
 ### How to read the user's keystrokes:
 1. Make sure you have created the character device from step 6 above.
 2. Read from `/dev/rootkit` file, for example, with `cat /dev/rootkit`.
@@ -25,7 +31,7 @@
 - [x] keylogging.
 - [x] controlling file renaming.
 - [x] providing root access from inside the machine.
-- [ ] process hiding from ps
+- [x] process hiding from ps
 - [ ] file hiding from ls.
 
 ### Minor TODO list:

