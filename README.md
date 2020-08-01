@@ -37,6 +37,7 @@
 - [x] Make a script for the qemu environment testing.
 - [ ] Automate the mknod process.
   
-<br>
-Built and tested on a 18.04 ubuntu machine (kernel version 5.3.0).
+---
+
+Built and tested on a 18.04 ubuntu machine (kernel version 5.3.0).  
 qemu environment runs 5.6.18 kernel version.
