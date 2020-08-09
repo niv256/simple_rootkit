@@ -1,9 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <fcntl.h>
-#include <string.h>
 
 #define PLEASE_GIVE_ME_ROOT "please_give_me_root"
 
