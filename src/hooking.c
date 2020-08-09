@@ -17,11 +17,13 @@ static int locked;
 static unsigned long *syscall_table;
 static int unhook(void);
 
-void init_hooking(void) {
+int init_hooking(void) {
 	memset(hook_table, 0, sizeof(hook_table));
 	table_index = 0;
 	locked = 0;
 	syscall_table = (unsigned long *) kallsyms_lookup_name("sys_call_table");
+
+	return 0;
 }
 
 int exit_hooking(void) {
@@ -37,16 +39,16 @@ int exit_hooking(void) {
 // if already hooked, error.
 int add_hook(unsigned long new_func,int index){
 	if (table_index == MAX_HOOKS) {
-		return 1;
+		return -1;
 	}
 
 	if (locked) {
-		return 2;
+		return -2;
 	}
 
     for (int i = 0; i < table_index; i++){
         if (index == hook_table[i].index) {
-            return 3;
+            return -3;
         }
     }
 
@@ -65,12 +67,14 @@ int hook(void){
 	if (locked) {
 		return 1;
 	}
+
 	set_addr_rw((unsigned long) syscall_table);
     for(int i = 0; i < table_index; i++){
         syscall_index = hook_table[i].index;
         syscall_table[syscall_index] = hook_table[i].new_func;
     }
 	set_addr_ro((unsigned long) syscall_table);
+
 	locked = 1;
 
 	return 0;

