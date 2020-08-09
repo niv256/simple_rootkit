@@ -25,7 +25,7 @@
 1. Read from `/dev/rootkit` file, for example, with `sudo cat /dev/rootkit`.
 
 ### How to spawn a root shell as a normal user once the rootkit has loaded:
-1. Execute the get_root program (in get_root folder) or anything similar which changes a file's name from "please_give" to "me_root_priv" and spawns a shell.
+1. Execute the get_root program (in get_root folder) or anything similar which write "please_give_me_root" to `/dev/rootkit` and spawns a shell.
 2. Execute the `id` program to make sure you are root.
 3. Enjoy unlimited capabilities!
 
