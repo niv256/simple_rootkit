@@ -21,11 +21,14 @@ int init_hooking(void) {
 	memset(hook_table, 0, sizeof(hook_table));
 	table_index = 0;
 	locked = 0;
+
+	// look up the syscall table symbol name to get address
 	syscall_table = (unsigned long *) kallsyms_lookup_name("sys_call_table");
 
 	return 0;
 }
 
+// unhook all syscalls and clear hook table memory
 int exit_hooking(void) {
 	int ret = unhook();
 	if (ret) {
@@ -38,14 +41,17 @@ int exit_hooking(void) {
 // adds a new syscall to the hooking function
 // if already hooked, error.
 int add_hook(unsigned long new_func,int index){
+	// if no more space
 	if (table_index == MAX_HOOKS) {
 		return -1;
 	}
 
+	// if already hooked
 	if (locked) {
 		return -2;
 	}
 
+	// if same syscall already added to table
     for (int i = 0; i < table_index; i++){
         if (index == hook_table[i].index) {
             return -3;
@@ -68,6 +74,7 @@ int hook(void){
 		return 1;
 	}
 
+	// hook every syscall in table
 	set_addr_rw((unsigned long) syscall_table);
     for(int i = 0; i < table_index; i++){
         syscall_index = hook_table[i].index;
@@ -86,6 +93,8 @@ static int unhook(void){
 	if (!locked) {
 		return 1;
 	}
+
+	// unhook every syscall in table
 	set_addr_rw((unsigned long) syscall_table);
     for(int i = 0; i < table_index; i++){
         int syscall_index = hook_table[i].index;
