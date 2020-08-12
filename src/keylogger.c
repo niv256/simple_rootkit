@@ -22,7 +22,7 @@ if(pkeystrokes + strlen(key) < keystrokes + sizeof(char)*BUFFER_SIZE){	\
 #define FIRST_KEY_CODE	0x2
 #define LAST_KEY_CODE	0x35
 const char character_table[] = {
-	'1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '\0', '\t',
+	'1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '\0', '\0',
 	'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\n', '\0',
 	'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', '\n', '\0', '\\',
 	'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/'
@@ -85,7 +85,11 @@ static void add_keycode(int key_code) {
 // in case of a "non-ascii" key
 static void add_special_keycode(int key_code){
 	switch(key_code){
-		case 0xe:
+		case 0x0f:
+			add_string_keystrokes("_TAB_")
+			break;
+
+		case 0x0e:
 			add_string_keystrokes("_BACKSPACE_")
 			break;
 
