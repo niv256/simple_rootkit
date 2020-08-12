@@ -5,12 +5,12 @@
 ### How to build and run the LKM
 1. Clone the repository to a local folder.
 2. cd into src/
-3. Run make (all - for included linux src, local - for local machine) in order to build the module.
+3. Run make in order to build the module.
 4. Watch the kernel logging with `dmesg -w` in order to see printk messages in real time.
 5. Insert the module with `sudo insmod rootkit.ko` and specify parameters:  
    pid - process id to hide.  
    file_name - file name to hide.  
-6. Remove the module with `sudo rmmod rootkit.ko`.
+6. Remove the module with `sudo rmmod rootkit`.
 
 ### How to hide a chosen pid:
 1. When inserting the module, pass the chosen pid as a parameter to the insmod function, like this:  
@@ -18,11 +18,11 @@
 
 
 ### How to hide a chosen file name:
-1. When inserting the module, pass the chosen pid as a parameter to the insmod function, like this:  
-   `sudo insmod rookit.ko pid="foobar"`, to hide file with the name "foobar".
+1. When inserting the module, pass the chosen file name as a parameter to the insmod function, like this:  
+   `sudo insmod rookit.ko pid=foobar`, to hide files with the name "foobar".
 
 ### How to read the user's keystrokes:
-1. Read from `/dev/rootkit` file, for example, with `sudo cat /dev/rootkit`.
+1. Read from `/dev/rootkit` file, for example, with `cat /dev/rootkit`.
 
 ### How to spawn a root shell as a normal user once the rootkit has loaded:
 1. Execute the get_root program (in get_root folder) or anything similar which write "please_give_me_root" to `/dev/rootkit` and spawns a shell.
@@ -42,5 +42,4 @@
   
 ---
 
-Built and tested on a 18.04 ubuntu machine (kernel version 5.3.0).  
-qemu environment runs 5.6.18 kernel version.
+Built and tested on a 18.04 ubuntu machine (kernel version 5.4.0).  
