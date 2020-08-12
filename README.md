@@ -31,7 +31,6 @@
 
 ### Currently planned features:
 - [x] keylogging.
-- [x] controlling file renaming.
 - [x] providing root access from inside the machine.
 - [x] process hiding from ps
 - [x] file hiding from ls.
