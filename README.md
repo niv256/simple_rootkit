@@ -14,7 +14,7 @@
 
 ### How to hide a chosen pid:
 1. When inserting the module, pass the chosen pid as a parameter to the insmod function, like this:  
-   `sudo insmod rookit.ko pid="6375"`, to hide pid 6375.
+   `sudo insmod rookit.ko pid=6375`, to hide pid 6375.
 
 
 ### How to hide a chosen file name:
@@ -37,7 +37,6 @@
 - [x] file hiding from ls.
 
 ### Minor TODO list:
-- [x] Make a script for the qemu environment testing.
 - [x] Automate the mknod process.
   
 ---
