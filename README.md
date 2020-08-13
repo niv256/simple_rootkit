@@ -19,7 +19,7 @@
 
 ### How to hide a chosen file name:
 1. When inserting the module, pass the chosen file name as a parameter to the insmod function, like this:  
-   `sudo insmod rookit.ko pid=foobar`, to hide files with the name "foobar".
+   `sudo insmod rookit.ko file_name=foobar`, to hide files with the name "foobar".
 
 ### How to read the user's keystrokes:
 1. Read from `/dev/rootkit` file, for example, with `cat /dev/rootkit`.
